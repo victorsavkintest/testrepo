@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "projects": {
+    "ngapp": {
+      "projectType": "application",
+      "root": "apps/ngapp",
+      "sourceRoot": "apps/ngapp/src",
+      "prefix": "myorg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/ngapp",
+            "index": "apps/ngapp/src/index.html",
+            "main": "apps/ngapp/src/main.ts",
+            "polyfills": "apps/ngapp/src/polyfills.ts",
+            "tsConfig": "apps/ngapp/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "assets": ["apps/ngapp/src/favicon.ico", "apps/ngapp/src/assets"],
+            "styles": ["apps/ngapp/src/styles.less"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/ngapp/src/environments/environment.ts",
+                  "with": "apps/ngapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "ngapp:build:production"
+            },
+            "development": {
+              "browserTarget": "ngapp:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngapp:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/ngapp/src/**/*.ts",
+              "apps/ngapp/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ngapp"],
+          "options": {
+            "jestConfig": "apps/ngapp/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ngapp-e2e": {
+      "root": "apps/ngapp-e2e",
+      "sourceRoot": "apps/ngapp-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ngapp-e2e/cypress.json",
+            "tsConfig": "apps/ngapp-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ngapp:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngapp:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ngapp-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "packageManager": "pnpm"
+  },
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "less",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "less",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "less"
+    }
+  },
+  "defaultProject": "ngapp"
+}
